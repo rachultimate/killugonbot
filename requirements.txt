@@ -1,4 +1,0 @@
-discord.js
-@discordjs/builders
-@discordjs/rest
-discord-api-types/v9
