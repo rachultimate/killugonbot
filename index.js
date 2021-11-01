@@ -14,7 +14,7 @@ const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
 //Rdr
 client.once('ready', () => {
     console.log('Ready!');
-    client.user.setActivity('!killugon', { type: 'WATCHING' });
+    client.user.setActivity('!kg', { type: 'WATCHING' });
 
     //Change avatar image randomly
     function changeAvatar() {
@@ -67,46 +67,72 @@ client.on('interactionCreate', async interaction => {
 const path = './imgs/';
 
     client.on('messageCreate', message => {
-        if(!message.content.startsWith(prefix) || message.author.bot) return;
+        const cmd = message.content.toLowerCase();
+        var commandValue = message.content.toLowerCase();
 
-        const commandValue = message.content.toLowerCase();
+        if(cmd.startsWith("!gonkillu")) {
+            commandValue = cmd.replace(/!gonkillu/, '!killugon');
+        }
+
+        if(cmd.startsWith("!kg")) {
+            commandValue = cmd.replace(/!kg/, '!killugon');
+            console.log(commandValue);
+        }
+
+        if(cmd.startsWith("!gk")) {
+            commandValue = cmd.replace(/!gk/, '!killugon');
+        }
+
+        if(!commandValue.startsWith("!killugon") || message.author.bot) return;
+
         console.log(`${message.member.nickname} in #${message.channel.name} triggered an interaction!`);
 
         if(commandValue === "!killugon" || commandValue === "!killugon help" || commandValue === "!killugon commands") {
+           
             const embedMsg = new MessageEmbed()
                 .setTitle("Killugon Bot")
                 .setDescription("About Killugon Bot")
                 .addFields(
-                    {name: '\u200b', value: '\u200b'},
-                    {name: "!killugon img", value: "Send a random killugon image from Pinterest"},
-                    {name: "!killugon gif", value: "Send a random killugon GIF from Pinterest"},
-                    {name: "!killugon kiss @user", value: "Kiss an user"},
-                    {name: "!killugon hug @user", value: "Hugs an user"},
-                    {name: '\u200b', value: '\u200b'},
+                    {name: '\u200b', value: 'Commands:'},
+                    {name: "!kg img", value: "Send a random killugon image from Pinterest"},
+                    {name: "!kg gif", value: "Send a random killugon GIF from Pinterest"},
+                    {name: "!kg kiss @user", value: "Kiss an user"},
+                    {name: "!kg hug @user", value: "Hugs an user"},
+                    {name: 'Prefixes: !killugon, !gonkillu, !kg, !gk', value: '\u200b'},
                     {name: "Developed by:", value: "rach#7705", inline: true},
                     {name: "For the server:", value: "⚡Killua_Zoldyck Original Server⚡", inline: true},
                 )
                 .setImage('https://cdn.discordapp.com/app-icons/903714022975746108/4cd1dda28fae71e3c228708f2ea28eb5.png')
                 .setFooter('Killugon IS canon >:3 🏳️‍🌈')
+                .setColor('ORANGE');
+
                 message.channel.send({embeds: [embedMsg]})
         } else if(commandValue === "!killugon img") {
             const images = fs.readdirSync('./imgs').filter(file => file.endsWith('.png') || file.endsWith('.jpg') || file.endsWith('.jpeg') || file.endsWith('.PNG') || file.endsWith('.JPG') || file.endsWith('.JPEG'));
             const randomImage = random(images);
             const attachImg = new MessageAttachment(path + randomImage, randomImage);
+
             const embedMsg = new MessageEmbed()
                 .setTitle("Killua x Gon")
                 .setDescription("Killugon fanart from Pinterest :3")
-                .setImage(`attachment://${randomImage}`);
-            message.channel.send({ embeds: [embedMsg], files: [path + randomImage] })
+                .setImage(`attachment://${randomImage}`)
+                .setColor('AQUA');
+
+            message.channel.send({ embeds: [embedMsg], files: [path + randomImage] });
+            console.log(`${message.member.nickname} used "${commandValue}". File sent: ${path}${randomImage}`);
         } else if(commandValue === "!killugon gif") {
             const images = fs.readdirSync('./imgs').filter(file => file.endsWith('.gif') || file.endsWith('.GIF'));
             const randomImage = random(images);
             const attachImg = new MessageAttachment(path + randomImage, randomImage);
+
             const embedMsg = new MessageEmbed()
                 .setTitle("Killua x Gon")
                 .setDescription("Killugon GIF from Pinterest :3")
-                .setImage(`attachment://${randomImage}`);
-            message.channel.send({ embeds: [embedMsg], files: [path + randomImage] })
+                .setImage(`attachment://${randomImage}`)
+                .setColor('GREEN');
+                
+            message.channel.send({ embeds: [embedMsg], files: [path + randomImage] });
+            console.log(`${message.member.nickname} used "${commandValue}". File sent: ${path}${randomImage}`);
          } else if(commandValue === "!killugon hentai" || commandValue === "!killugon porn" || commandValue === "!killugon nsfw") {
             if(message.channel.nsfw) {
                 message.channel.send(`I didn't create this command yet cuz I don't wanna search for this kind of thing...`);
@@ -127,6 +153,7 @@ const path = './imgs/';
                     .setColor("GOLD")
                     .setImage(`attachment://${randomImage}`)
                 message.channel.send({embeds: [msgEmbed], files: [kPath + randomImage]});
+                console.log(`${message.member.nickname} used "${commandValue}". File sent: ${kPath}${randomImage}`);
             } else {
                 message.channel.send("You mentioned an invalid user.");
             }
@@ -144,6 +171,7 @@ const path = './imgs/';
                     .setColor("GOLD")
                     .setImage(`attachment://${randomImage}`)
                 message.channel.send({embeds: [msgEmbed], files: [kPath + randomImage]});
+                console.log(`${message.member.nickname} used "${commandValue}". File sent: ${kPath}${randomImage}`);
             } else {
                 message.channel.send("You mentioned an invalid user.");
             }
