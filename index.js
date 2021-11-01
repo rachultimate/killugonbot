@@ -1,15 +1,30 @@
 //Variables and constants
-const {Client, Collection, Intents, MessageAttachment, MessageEmbed, Message, MessageActionRow, MessageButton} = require('discord.js');
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, "GUILDS", "GUILD_MESSAGES"] }); 
+const {Client, Collection, Intents, MessageAttachment, MessageEmbed, Message, MessageActionRow, MessageButton, Guild} = require('discord.js');
+const client = new Client({ 
+    allowedMentions: { parse: ['users', 'roles'] }, 
+    partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'USER', 'GUILD_MEMBER'], 
+    intents: [Intents.FLAGS.GUILDS, "GUILDS", "GUILD_MESSAGES"] }); 
 const {token, prefix} = require('./config.json');
 const fs = require('fs');
 
 client.commands = new Collection();
 
+const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
 //Rdr
 client.once('ready', () => {
     console.log('Ready!');
     client.user.setActivity('!killugon', { type: 'WATCHING' });
+
+    //Change avatar image randomly
+    function changeAvatar() {
+        const images = fs.readdirSync('./avatars');
+        const path = "./avatars/"
+        const randomAvatar = path + random(images);
+        client.user.setAvatar(randomAvatar)
+        console.log("Avatar changed for: " + randomAvatar);
+    };
+    setInterval(changeAvatar, 500000);
 });
 
 //Registering events
@@ -49,7 +64,6 @@ client.on('interactionCreate', async interaction => {
 });
 
 //Prefix commands
-const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const path = './imgs/';
 
     client.on('messageCreate', message => {
@@ -58,14 +72,16 @@ const path = './imgs/';
         const commandValue = message.content.toLowerCase();
         console.log(`${message.member.nickname} in #${message.channel.name} triggered an interaction!`);
 
-        if(commandValue === "!killugon") {
+        if(commandValue === "!killugon" || commandValue === "!killugon help" || commandValue === "!killugon commands") {
             const embedMsg = new MessageEmbed()
                 .setTitle("Killugon Bot")
                 .setDescription("About Killugon Bot")
                 .addFields(
                     {name: '\u200b', value: '\u200b'},
                     {name: "!killugon img", value: "Send a random killugon image from Pinterest"},
-                    {name: "!killugon gif", value: "Send a random killugon GIF from Pinterest", inline: true},
+                    {name: "!killugon gif", value: "Send a random killugon GIF from Pinterest"},
+                    {name: "!killugon kiss @user", value: "Kiss an user"},
+                    {name: "!killugon hug @user", value: "Hugs an user"},
                     {name: '\u200b', value: '\u200b'},
                     {name: "Developed by:", value: "rach#7705", inline: true},
                     {name: "For the server:", value: "⚡Killua_Zoldyck Original Server⚡", inline: true},
@@ -91,12 +107,48 @@ const path = './imgs/';
                 .setDescription("Killugon GIF from Pinterest :3")
                 .setImage(`attachment://${randomImage}`);
             message.channel.send({ embeds: [embedMsg], files: [path + randomImage] })
-        } else if(commandValue === "!killugon hentai" || commandValue === "!killugon porn" || commandValue === "!killugon nsfw") {
+         } else if(commandValue === "!killugon hentai" || commandValue === "!killugon porn" || commandValue === "!killugon nsfw") {
             if(message.channel.nsfw) {
                 message.channel.send(`I didn't create this command yet cuz I don't wanna search for this kind of thing...`);
             } else {
                 message.channel.send('This command is only allowed on NSFW channels!');
             }
+        } else if(commandValue.startsWith("!killugon kiss")) {
+            const targetUser = message.mentions.users.first();
+            if(targetUser) {
+                const images = fs.readdirSync('./kisses/');
+                const kPath = './kisses/'
+                const randomImage = random(images);
+                const attachImg = new MessageAttachment(kPath + randomImage, randomImage);
+
+                const msgEmbed = new MessageEmbed()
+                    .setTitle(`${message.member.nickname} kissed ${targetUser.username}! How cute :3`)
+                    .setDescription("All the kiss images are safe of NSFW")
+                    .setColor("GOLD")
+                    .setImage(`attachment://${randomImage}`)
+                message.channel.send({embeds: [msgEmbed], files: [kPath + randomImage]});
+            } else {
+                message.channel.send("You mentioned an invalid user.");
+            }
+        } else if(commandValue.startsWith("!killugon hug")) {
+            const targetUser = message.mentions.users.first();
+            if(targetUser) {
+                const images = fs.readdirSync('./hugs/');
+                const kPath = './hugs/'
+                const randomImage = random(images);
+                const attachImg = new MessageAttachment(kPath + randomImage, randomImage);
+
+                const msgEmbed = new MessageEmbed()
+                    .setTitle(`${message.member.nickname} hugs ${targetUser.username}! Aww 🥺`)
+                    .setDescription("All the hugs images are safe of NSFW")
+                    .setColor("GOLD")
+                    .setImage(`attachment://${randomImage}`)
+                message.channel.send({embeds: [msgEmbed], files: [kPath + randomImage]});
+            } else {
+                message.channel.send("You mentioned an invalid user.");
+            }
+        } else {
+            message.channel.send("You typed an invalid command.");
         }
     });
 
