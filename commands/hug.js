@@ -26,11 +26,13 @@ module.exports = {
             console.log(`${message.member.nickname} used "!killugon hug". File sent: ${kPath}${randomImage}`);
         } else if(targetRole) {
             targetRole.members.forEach(guildMember => {
-                if(guildMember.user.username) {
+                const mentionedUser = guildMember.user.username;
+                const commandUser = message.member.user.username;
+                if(mentionedUser != commandUser && mentionedUser) {
                     if(eachMember == "") {
-                        eachMember = guildMember.user.username;
+                        eachMember = mentionedUser;
                     } else {
-                        eachMember = eachMember + " and " + guildMember.user.username;
+                        eachMember = eachMember + " and " + mentionedUser;
                     }
                 }
             });
