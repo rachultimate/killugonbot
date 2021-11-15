@@ -1,9 +1,38 @@
+//Consts and Libraries
+const {Discord, Intents, Client, Collection} = require('discord.js');
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, "GUILDS", "GUILD_MESSAGES"], partials: ["MESSAGE", "CHANNEL", "REACTION"] });
+const {token} = require('./config.json');
+
+client.commands = new Collection();
+client.events = new Collection();
+
+['command_handler', 'event_handler'].forEach(handler => {
+    require(`./handler/${handler}`)(client, Discord);
+});
+
+//Log in on Discord using the bot's token
+client.login(token);
+
+
+
+
+
+
+
+
+
+
+
+
+//OLD CODE
+
+/*
 //Variables and constants
 const {Client, Collection, Intents, MessageAttachment, MessageEmbed, Message, MessageActionRow, MessageButton, Guild} = require('discord.js');
 const client = new Client({ 
     allowedMentions: { parse: ['users', 'roles'] }, 
-    partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'USER', 'GUILD_MEMBER'], 
-    intents: [Intents.FLAGS.GUILDS, "GUILDS", "GUILD_MESSAGES"] }); 
+    partials: ['MESSAGE', 'CHANNEL', 'REACTION'], 
+    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, "GUILDS", "GUILD_MESSAGES"] }); 
 const {token, prefix} = require('./config.json');
 const fs = require('fs');
 
@@ -11,7 +40,7 @@ client.commands = new Collection();
 
 const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-//Rdr
+//Rtr
 client.once('ready', () => {
     console.log('Ready!');
     client.user.setActivity('!kg', { type: 'WATCHING' });
@@ -39,31 +68,9 @@ for(const file of eventFiles) {
     }
 }
 
-//Registering commands
-
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-
-for(const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    client.commands.set(command.data.name, command);
-}
-
-client.on('interactionCreate', async interaction => {
-    if(!interaction.isCommand()) return;
-
-    const command = client.commands.get(interaction.commandName);
-
-    if(!command) return;
-
-    try {
-        await command.execute(interaction)
-    } catch (error) {
-        console.log(error);
-        await interaction.reply({content: "An error occured while trying to execute this command.", ephemeral: true});
-    }
-});
-
 //Prefix commands
+
+
 const path = './imgs/';
 
     client.on('messageCreate', message => {
@@ -107,7 +114,10 @@ const path = './imgs/';
                 .setColor('ORANGE');
 
                 message.channel.send({embeds: [embedMsg]})
-        } else if(commandValue === "!killugon img") {
+        }else if(commandValue === "!killugon ping") {
+            const ping = Date.now() - message.createdTimestamp;
+            message.channel.send(`Pong! ${ping}ms`)
+        }else if(commandValue === "!killugon img") {
             const images = fs.readdirSync('./imgs').filter(file => file.endsWith('.png') || file.endsWith('.jpg') || file.endsWith('.jpeg') || file.endsWith('.PNG') || file.endsWith('.JPG') || file.endsWith('.JPEG'));
             const randomImage = random(images);
             const attachImg = new MessageAttachment(path + randomImage, randomImage);
@@ -130,7 +140,7 @@ const path = './imgs/';
                 .setDescription("Killugon GIF from Pinterest :3")
                 .setImage(`attachment://${randomImage}`)
                 .setColor('GREEN');
-                
+
             message.channel.send({ embeds: [embedMsg], files: [path + randomImage] });
             console.log(`${message.member.nickname} used "${commandValue}". File sent: ${path}${randomImage}`);
          } else if(commandValue === "!killugon hentai" || commandValue === "!killugon porn" || commandValue === "!killugon nsfw") {
@@ -147,12 +157,12 @@ const path = './imgs/';
                 const randomImage = random(images);
                 const attachImg = new MessageAttachment(kPath + randomImage, randomImage);
 
-                const msgEmbed = new MessageEmbed()
+                const embedMsg = new MessageEmbed()
                     .setTitle(`${message.member.nickname} kissed ${targetUser.username}! How cute :3`)
                     .setDescription("All the kiss images are safe of NSFW")
                     .setColor("GOLD")
                     .setImage(`attachment://${randomImage}`)
-                message.channel.send({embeds: [msgEmbed], files: [kPath + randomImage]});
+                message.channel.send({embeds: [embedMsg], files: [kPath + randomImage]});
                 console.log(`${message.member.nickname} used "${commandValue}". File sent: ${kPath}${randomImage}`);
             } else {
                 message.channel.send("You mentioned an invalid user.");
@@ -165,12 +175,12 @@ const path = './imgs/';
                 const randomImage = random(images);
                 const attachImg = new MessageAttachment(kPath + randomImage, randomImage);
 
-                const msgEmbed = new MessageEmbed()
+                const embedMsg = new MessageEmbed()
                     .setTitle(`${message.member.nickname} hugs ${targetUser.username}! Aww 🥺`)
                     .setDescription("All the hugs images are safe of NSFW")
                     .setColor("GOLD")
                     .setImage(`attachment://${randomImage}`)
-                message.channel.send({embeds: [msgEmbed], files: [kPath + randomImage]});
+                message.channel.send({embeds: [embedMsg], files: [kPath + randomImage]});
                 console.log(`${message.member.nickname} used "${commandValue}". File sent: ${kPath}${randomImage}`);
             } else {
                 message.channel.send("You mentioned an invalid user.");
@@ -179,6 +189,4 @@ const path = './imgs/';
             message.channel.send("You typed an invalid command.");
         }
     });
-
-//Login on DC with token
-client.login(token);
+    */
