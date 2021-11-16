@@ -27,12 +27,16 @@ module.exports = (Discord, client, message) => {
     const cmd = commandValue.split(' ').shift();
 
     //Execute the "help" command
-    if(cmdLC === "!killugon ") {
+    if(cmdLC === "!killugon " || cmdLC === "!killugon commands" || cmdLC === "!killugon cmds") {
         const helpCmd = client.commands.get("help");
         helpCmd.execute(client, message, Discord);
     }
 
     //Execute the command
     const command = client.commands.get(cmd);
-    if(command) command.execute(client, message, Discord);
+    if(!command) {
+        message.reply("You typed an invalid command. Use **!kg help** to see all the commands you can use :3");
+    } else {
+        command.execute(client, message, Discord);
+    }
 }
