@@ -1,8 +1,10 @@
+var fs = require('fs');
+
 module.exports = {
     name: 'img',
     description: 'send a random killugon img',
     execute(client, message) {
-        const images = fs.readdirSync('./imgs').filter(file => file.endsWith('.png') || file.endsWith('.jpg') || file.endsWith('.jpeg') || file.endsWith('.PNG') || file.endsWith('.JPG') || file.endsWith('.JPEG'));
+        const images = fs.readdirSync('.\imgs').filter(file => file.endsWith('.png') || file.endsWith('.jpg') || file.endsWith('.jpeg') || file.endsWith('.PNG') || file.endsWith('.JPG') || file.endsWith('.JPEG'));
         const randomImage = random(images);
         const attachImg = new MessageAttachment(path + randomImage, randomImage);
 
