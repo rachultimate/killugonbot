@@ -24,12 +24,11 @@ module.exports = (Discord, client, message) => {
 
     //Removes the prefix and get only the command
     const commandValue = cmdLC.replace(/!killugon +/, '');
-    const cmd = commandValue.split(' ').shift();
+    let cmd = commandValue.split(' ').shift();
 
     //Execute the "help" command
     if(cmdLC === "!killugon " || cmdLC === "!killugon commands" || cmdLC === "!killugon cmds") {
-        const helpCmd = client.commands.get("help");
-        helpCmd.execute(client, message, Discord);
+        cmd = "help";
     }
 
     //Execute the command
