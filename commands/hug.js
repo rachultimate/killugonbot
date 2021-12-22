@@ -52,6 +52,7 @@ module.exports = {
                 .setDescription("All the hugs images are safe of NSFW")
                 .setColor("GOLD")
                 .setImage(`attachment://${randomImage}`)
+                .setFooter(`Request by ${commandUserTag}`);
             message.reply({embeds: [embedMsg], files: [kPath + randomImage]});
             console.log(`${commandUserTag} used "${commandValue}". File sent: ${kPath}${randomImage}`);
         } else {
