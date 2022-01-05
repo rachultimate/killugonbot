@@ -5,8 +5,9 @@ module.exports = {
     name: 'kiss',
     description: 'Kiss someone',
     execute(client, message, mentionedUser) {
-        const commandUser = message.member.user.username;
-        const commandUserTag = (message.author.username) + "#" + (message.author.discriminator);
+        const commandAuthor = message.author;
+        const commandAuthorUsername = commandAuthor.username;
+        const commandAuthorTag = (message.author.username) + "#" + (message.author.discriminator);
         const targetUser = message.mentions.users.first();
         const commandValue = message.content;
         
@@ -19,13 +20,13 @@ module.exports = {
             const attachImg = new MessageAttachment(kPath + randomImage, randomImage);
 
             const embedMsg = new MessageEmbed()
-                .setTitle(`${commandUser} kissed ${commandTarget}! How cute :3`)
+                .setTitle(`${commandAuthorUsername} kissed ${commandTarget}! How cute :3`)
                 .setDescription("All the kiss images are safe of NSFW")
                 .setColor("GOLD")
                 .setImage(`attachment://${randomImage}`)
-                .setFooter(`Request by ${commandUserTag}`);
+                .setFooter(`Request by ${commandAuthorTag}`);
             message.reply({embeds: [embedMsg], files: [kPath + randomImage]});
-            console.log(`${commandUserTag} used "${commandValue}". File sent: ${kPath}${randomImage}`);
+            console.log(`${commandAuthorTag} used "${commandValue}". File sent: ${kPath}${randomImage}`);
         } else {
             message.reply("You mentioned an invalid user.");
         }
