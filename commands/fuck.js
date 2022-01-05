@@ -4,7 +4,7 @@ const fs = require('fs');
 module.exports = {
     name: 'fuck',
     description: 'F*ck someone',
-    execute(client, message, mentionedUser) {
+    execute(client, message) {
         const commandUser = message.member.user.username;
         const commandUserTag = (message.author.username) + "#" + (message.author.discriminator);
         const targetUser = message.mentions.users.first();
