@@ -4,7 +4,7 @@ const fs = require('fs');
 module.exports = {
     name: 'kiss',
     description: 'Kiss someone',
-    execute(client, message, mentionedUser) {
+    execute(client, message) {
         const commandAuthor = message.author;
         const commandAuthorUsername = commandAuthor.username;
         const commandAuthorTag = (message.author.username) + "#" + (message.author.discriminator);
@@ -26,7 +26,7 @@ module.exports = {
                 .setImage(`attachment://${randomImage}`)
                 .setFooter(`Request by ${commandAuthorTag}`);
             message.reply({embeds: [embedMsg], files: [kPath + randomImage]});
-            console.log(`${commandAuthorTag} used "${commandValue}". File sent: ${kPath}${randomImage}`);
+            console.log(`${commandAuthorTag} used "${commandValue} on channel: #${message.channel.name}". File sent: ${kPath}${randomImage}`);
         } else {
             message.reply("You mentioned an invalid user.");
         }
